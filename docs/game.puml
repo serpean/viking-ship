@@ -1,0 +1,28 @@
+@startuml
+class Game {
+    + endPoint : Float
+    + xLength : Float
+    + yLength : Float
+}
+
+class Ship {
+    + coords: Point
+    + healthPoints : Integer
+}
+
+class Rock {
+    + coords: Point
+    + size : Float
+}
+
+class OarsPlayer {
+    + coords: Point
+    + touched : Boolean
+    + validateOar(x, y) : Boolean
+}
+
+Game "1" *--> "1" Ship
+Game "1" *--> "*" Rock
+
+Ship "1" *-- "4" OarsPlayer
+@enduml
