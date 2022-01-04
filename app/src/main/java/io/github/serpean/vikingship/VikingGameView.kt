@@ -21,8 +21,7 @@ class VikingGameView : View {
     private val startActivity = Intent(context, StartActivity::class.java)
 
     private val windPlayers: MutableMap<Int, Wind> = mutableMapOf()
-    private var game: Game? = null
-
+    private var game: Game
     // Texture create here to avoid resources resolution issues
     private val vikingShip = BitmapFactory.decodeResource(resources, R.drawable.viking_ship)
     private val island = BitmapFactory.decodeResource(resources, R.drawable.island)
@@ -32,8 +31,8 @@ class VikingGameView : View {
     init {
         startActivity.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
         val windowsManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-        var width : Int
-        var height : Int
+        var width: Int
+        var height: Int
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             width = windowsManager.currentWindowMetrics.bounds.right
             height = windowsManager.currentWindowMetrics.bounds.bottom
@@ -41,33 +40,25 @@ class VikingGameView : View {
             width = windowsManager.defaultDisplay.width
             height = windowsManager.defaultDisplay.height
         }
-        game = Game(width, height)
+        val level = (context as MainActivity).intent.extras?.get("level") as Game.Level
+        game = Game(width, height, level)
     }
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attributeSet: AttributeSet) : super(context, attributeSet)
 
     override fun onDraw(canvas: Canvas?) {
-        if (game != null) {
-            if (game!!.isIsland()) {
-                Toast.makeText(context, "Winner!", Toast.LENGTH_SHORT).show()
-                game = null
-                context.startActivity(startActivity)
-                return
-            }
-            if (game!!.isLooser()) {
-                Toast.makeText(context, "Looser!", Toast.LENGTH_SHORT).show()
-                game = null
-                context.startActivity(startActivity)
-                return
-            }
-
-            for (rock: Rock in game!!.rocks) {
-                rock.draw(canvas, rocks)
-            }
-            game!!.island.draw(canvas, island)
-            game!!.ship.draw(canvas, vikingShip)
+        if (game.isIsland()) {
+            Toast.makeText(context, "Land!", Toast.LENGTH_SHORT).show()
+            context.startActivity(startActivity)
+            return
         }
+        if (game.isLooser()) {
+            Toast.makeText(context, "Looser!", Toast.LENGTH_SHORT).show()
+            context.startActivity(startActivity)
+            return
+        }
+        game.draw(canvas, rocks, island, vikingShip)
         for (path: Wind in windPlayers.values) {
             for (windPlayer: Wind in windPlayers.values) {
                 windPlayer.draw(canvas, wind)
@@ -97,8 +88,9 @@ class VikingGameView : View {
                     val currentX = event.getX(pointerIndex)
                     val currentY = event.getY(pointerIndex)
                     windPlayers[i] = Wind(currentX, currentY)
-                    val speed = if (windPlayers.size > 3) ((100..200).random()/100).toFloat() else 0F
-                    game?.moveShip(currentX, currentY, speed)
+                    val speed =
+                        if (windPlayers.size > 3) ((100..200).random() / 100).toFloat() else 0F
+                    game.moveShip(currentX, currentY, speed)
                 }
             }
         }

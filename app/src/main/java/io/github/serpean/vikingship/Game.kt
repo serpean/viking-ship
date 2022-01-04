@@ -1,5 +1,7 @@
 package io.github.serpean.vikingship
 
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import io.github.serpean.vikingship.canvas.Island
 import io.github.serpean.vikingship.canvas.Rock
 import io.github.serpean.vikingship.canvas.Ship
@@ -57,6 +59,14 @@ class Game(private val xLength: Int, private val yLength: Int, level : Level) {
 
     fun isLooser(): Boolean {
         return rocks.any { it.intersect(ship) }
+    }
+
+    fun draw(canvas: Canvas?, rockTexture: Bitmap, islandTexture: Bitmap, vikingShipTexture: Bitmap) {
+        for (rock: Rock in rocks) {
+            rock.draw(canvas, rockTexture)
+        }
+        island.draw(canvas, islandTexture)
+        ship.draw(canvas, vikingShipTexture)
     }
 
     enum class Level(val rocks: Int) {
