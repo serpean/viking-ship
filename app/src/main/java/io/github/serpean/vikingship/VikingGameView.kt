@@ -15,7 +15,6 @@ import io.github.serpean.vikingship.canvas.Wind
 class VikingGameView : View {
 
     private val windPlayers: MutableMap<Int, Wind> = mutableMapOf()
-    private val playerPaint: Paint = Paint()
     private var game: Game? = null
 
     // Texture create here to avoid resources resolution issues
@@ -23,14 +22,6 @@ class VikingGameView : View {
     private val island = BitmapFactory.decodeResource(resources, R.drawable.island)
     private val rocks: Bitmap = BitmapFactory.decodeResource(resources, R.drawable.rocks)
     private val wind = BitmapFactory.decodeResource(resources, R.drawable.wind)
-
-    init {
-        playerPaint.isAntiAlias = true
-        playerPaint.strokeWidth = 6f
-        playerPaint.color = Color.BLUE
-        playerPaint.style = Paint.Style.STROKE
-        playerPaint.strokeJoin = Paint.Join.ROUND
-    }
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attributeSet: AttributeSet) : super(context, attributeSet)
