@@ -4,7 +4,7 @@ import io.github.serpean.vikingship.canvas.Island
 import io.github.serpean.vikingship.canvas.Rock
 import io.github.serpean.vikingship.canvas.Ship
 
-class Game(private val xLength: Int, private val yLength: Int, private val level : Level) {
+class Game(private val xLength: Int, private val yLength: Int, level : Level) {
 
     private val margin = 100
     var ship = Ship(
@@ -22,8 +22,9 @@ class Game(private val xLength: Int, private val yLength: Int, private val level
             val posX = (0..xLength).random().toFloat()
             val posY = (0..yLength).random().toFloat()
             val size = (20..100).random().toFloat()
-            if(!ship.contains(posX, posY)) { // avoid loose game from start
-                rocks.add(Rock(posX, posY, size))
+            val newRock = Rock(posX, posY, size)
+            if(!ship.intersect(newRock)) { // avoid loose game from start
+                rocks.add(newRock)
             }
         }
     }
@@ -50,7 +51,7 @@ class Game(private val xLength: Int, private val yLength: Int, private val level
         }
     }
 
-    fun isWinner(): Boolean {
+    fun isIsland(): Boolean {
         return island.intersect(ship)
     }
 

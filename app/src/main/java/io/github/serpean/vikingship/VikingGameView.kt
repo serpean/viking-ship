@@ -2,17 +2,23 @@ package io.github.serpean.vikingship
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.graphics.*
+import android.os.Build
 import android.util.AttributeSet
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
+import android.view.WindowManager
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import io.github.serpean.vikingship.canvas.Rock
 import io.github.serpean.vikingship.canvas.Wind
 
 
 class VikingGameView : View {
+
+    private val startActivity = Intent(context, StartActivity::class.java)
 
     private val windPlayers: MutableMap<Int, Wind> = mutableMapOf()
     private var game: Game? = null
@@ -23,24 +29,39 @@ class VikingGameView : View {
     private val rocks: Bitmap = BitmapFactory.decodeResource(resources, R.drawable.rocks)
     private val wind = BitmapFactory.decodeResource(resources, R.drawable.wind)
 
+    init {
+        startActivity.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+        val windowsManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        var width : Int
+        var height : Int
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            width = windowsManager.currentWindowMetrics.bounds.right
+            height = windowsManager.currentWindowMetrics.bounds.bottom
+        } else {
+            width = windowsManager.defaultDisplay.width
+            height = windowsManager.defaultDisplay.height
+        }
+        game = Game(width, height)
+    }
+
     constructor(context: Context) : super(context)
     constructor(context: Context, attributeSet: AttributeSet) : super(context, attributeSet)
 
     override fun onDraw(canvas: Canvas?) {
-        if (game == null) {
-            game = Game(this.measuredWidth, this.measuredHeight)
-        }
-        if (game!!.isWinner()) {
-            Toast.makeText(context, "Winner!", Toast.LENGTH_SHORT).show()
-            game = null
-            return
-        }
-        if (game!!.isLooser()) {
-            Toast.makeText(context, "Looser!", Toast.LENGTH_SHORT).show()
-            game = null
-            return
-        }
         if (game != null) {
+            if (game!!.isIsland()) {
+                Toast.makeText(context, "Winner!", Toast.LENGTH_SHORT).show()
+                game = null
+                context.startActivity(startActivity)
+                return
+            }
+            if (game!!.isLooser()) {
+                Toast.makeText(context, "Looser!", Toast.LENGTH_SHORT).show()
+                game = null
+                context.startActivity(startActivity)
+                return
+            }
+
             for (rock: Rock in game!!.rocks) {
                 rock.draw(canvas, rocks)
             }
