@@ -2,23 +2,27 @@ package io.github.serpean.vikingship
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
+import android.graphics.*
 import android.util.AttributeSet
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.widget.Toast
 import io.github.serpean.vikingship.canvas.Rock
-import io.github.serpean.vikingship.util.Point
+import io.github.serpean.vikingship.canvas.Wind
+
 
 class VikingGameView : View {
 
-    private val points: MutableMap<Int, Point> = mutableMapOf()
-    private val paint: Paint = Paint()
+    private val windPlayers: MutableMap<Int, Wind> = mutableMapOf()
     private val playerPaint: Paint = Paint()
     private var game: Game? = null
+
+    // Texture create here to avoid resources resolution issues
+    private val vikingShip = BitmapFactory.decodeResource(resources, R.drawable.viking_ship)
+    private val island = BitmapFactory.decodeResource(resources, R.drawable.island)
+    private val rocks: Bitmap = BitmapFactory.decodeResource(resources, R.drawable.rocks)
+    private val wind = BitmapFactory.decodeResource(resources, R.drawable.wind)
 
     init {
         playerPaint.isAntiAlias = true
@@ -32,13 +36,6 @@ class VikingGameView : View {
     constructor(context: Context, attributeSet: AttributeSet) : super(context, attributeSet)
 
     override fun onDraw(canvas: Canvas?) {
-
-        for (path: Point in points.values) {
-            for (point: Point in points.values) {
-                canvas?.drawCircle(point.x, point.y, 100f, playerPaint)
-            }
-        }
-
         if (game == null) {
             game = Game(this.measuredWidth, this.measuredHeight)
         }
@@ -54,13 +51,15 @@ class VikingGameView : View {
         }
         if (game != null) {
             for (rock: Rock in game!!.rocks) {
-                paint.color = rock.color
-                canvas?.drawRect(rock.toRectF(), paint)
+                rock.draw(canvas, rocks)
             }
-            paint.color = game!!.endPoint.color
-            canvas?.drawRect(game!!.endPoint.toRectF(), paint)
-            paint.color = game!!.ship.color
-            canvas?.drawRect(game!!.ship.toRectF(), paint)
+            game!!.island.draw(canvas, island)
+            game!!.ship.draw(canvas, vikingShip)
+        }
+        for (path: Wind in windPlayers.values) {
+            for (windPlayer: Wind in windPlayers.values) {
+                windPlayer.draw(canvas, wind)
+            }
         }
     }
 
@@ -70,23 +69,23 @@ class VikingGameView : View {
         when (event.actionMasked) {
             MotionEvent.ACTION_POINTER_DOWN,
             MotionEvent.ACTION_DOWN -> {
-                val point = Point(event.getX(index), event.getY(index));
+                val newWindPlayer = Wind(event.getX(index), event.getY(index));
                 Log.i("down id", event.getPointerId(index).toString());
-                points[event.getPointerId(index)] = point;
+                windPlayers[event.getPointerId(index)] = newWindPlayer;
             }
             MotionEvent.ACTION_POINTER_UP,
             MotionEvent.ACTION_UP -> {
-                val currentPointId = event.getPointerId(index)
-                Log.i("up id", currentPointId.toString());
-                points.remove(currentPointId);
+                val currentWindPlayerId = event.getPointerId(index)
+                Log.i("up id", currentWindPlayerId.toString());
+                windPlayers.remove(currentWindPlayerId);
             }
             MotionEvent.ACTION_MOVE -> {
-                for (i: Int in points.keys) {
+                for (i: Int in windPlayers.keys) {
                     val pointerIndex: Int = event.findPointerIndex(i);
                     val currentX = event.getX(pointerIndex)
                     val currentY = event.getY(pointerIndex)
-                    points[i] = Point(currentX, currentY)
-                    val speed = if (points.size > 3) 1F else 0F
+                    windPlayers[i] = Wind(currentX, currentY)
+                    val speed = if (windPlayers.size > 3) ((100..200).random()/100).toFloat() else 0F
                     game?.moveShip(currentX, currentY, speed)
                 }
             }

@@ -5,24 +5,34 @@ class Game {
     + yLength : Float
 }
 
-class Ship {
-    + coords: Point
-    + healthPoints : Integer
+class CanvasEntity {
+    + centerX : Float
+    + centerY : Float
+    + size : Integer
+    + color : Integer
+    + texture : Bitmap
 }
 
-class Rock {
-    + coords: Point
-    + size : Float
+class Ship extends CanvasEntity {
 }
 
-class OarsPlayer {
-    + coords: Point
-    + touched : Boolean
-    + validateOar(x, y) : Boolean
+class Rock extends CanvasEntity {
 }
+
+class Island extends CanvasEntity {
+}
+
+class Wind extends CanvasEntity {
+}
+
+class VikingGameView
+
+MainActivity "1" *--> "1" VikingGameView
+VikingGameView "1" *--> "1" Game
+VikingGameView "1" *--> "*" Wind : WindPlayers
 
 Game "1" *--> "1" Ship
+Game "1" *--> "1" Island
 Game "1" *--> "*" Rock
 
-Ship "1" *-- "4" OarsPlayer
 @enduml

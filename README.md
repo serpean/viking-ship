@@ -1,16 +1,18 @@
 # viking-ship-app-pof
 Proof of concept of a local multiplayer Android Game based in multitouch technology
 
-## Requirements
-- 360º se pueda usar desde cualquier lado de la pantalla
-- Tenga naturaleza ubicua
-- Fomente la interacción simultánea de varios usuarios
-
 ## Game Rules
-- Move from start point to end point without collisions
+- 1 to 4 players
+- Move the boat to the town without any collisions
 
-```puml
-@startuml
+## Requirements
+- 360º (can be used from any screen side)
+- Have a ubiquitous nature
+- Encourages the simultaneous interaction of multiple users
 
-@enduml
-``
+## Design
+![App UML diagram](./docs/out/game.png "Game diagram")
+
+## Acknowledgements
+<div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+https://www.deviantart.com/berserkitty/art/Seamless-Cartoon-styled-Water-Texture-743787929
