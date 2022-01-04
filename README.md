@@ -1,5 +1,6 @@
 # viking-ship-app-pof
 Proof of concept of a local multiplayer Android Game based in multitouch technology
+![Game play screenshot](./docs/gameplay.jpg "Game play")
 
 ## Game Rules
 - 1 to 4 players

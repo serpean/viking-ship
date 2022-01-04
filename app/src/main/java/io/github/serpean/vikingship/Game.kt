@@ -9,11 +9,12 @@ import io.github.serpean.vikingship.canvas.Ship
 class Game(private val xLength: Int, private val yLength: Int, level : Level) {
 
     private val margin = 100
+    var score = 0
     var ship = Ship(
         (0..(xLength - margin)).random().toFloat(),
         (0..(yLength - margin)).random().toFloat()
     ) // start point
-    val island = Island(
+    var island = Island(
         (0..xLength).random().toFloat(),
         (0..yLength).random().toFloat()
     )
@@ -53,8 +54,16 @@ class Game(private val xLength: Int, private val yLength: Int, level : Level) {
         }
     }
 
-    fun isIsland(): Boolean {
-        return island.intersect(ship)
+    fun checkIsland(): Boolean {
+        if (island.intersect(ship)) {
+            island = Island(
+                (0..xLength).random().toFloat(),
+                (0..yLength).random().toFloat()
+            )
+            score++
+            return true
+        }
+        return false
     }
 
     fun isLooser(): Boolean {

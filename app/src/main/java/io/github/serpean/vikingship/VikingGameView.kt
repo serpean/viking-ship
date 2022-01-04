@@ -11,8 +11,6 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
-import androidx.annotation.RequiresApi
-import io.github.serpean.vikingship.canvas.Rock
 import io.github.serpean.vikingship.canvas.Wind
 
 
@@ -48,16 +46,16 @@ class VikingGameView : View {
     constructor(context: Context, attributeSet: AttributeSet) : super(context, attributeSet)
 
     override fun onDraw(canvas: Canvas?) {
-        if (game.isIsland()) {
-            Toast.makeText(context, "Land!", Toast.LENGTH_SHORT).show()
-            context.startActivity(startActivity)
-            return
-        }
         if (game.isLooser()) {
             Toast.makeText(context, "Looser!", Toast.LENGTH_SHORT).show()
             context.startActivity(startActivity)
             return
         }
+
+        if (game.checkIsland()) {
+            Toast.makeText(context, "Land ${game.score} times!", Toast.LENGTH_SHORT).show()
+        }
+
         game.draw(canvas, rocks, island, vikingShip)
         for (path: Wind in windPlayers.values) {
             for (windPlayer: Wind in windPlayers.values) {
@@ -84,13 +82,17 @@ class VikingGameView : View {
             }
             MotionEvent.ACTION_MOVE -> {
                 for (i: Int in windPlayers.keys) {
-                    val pointerIndex: Int = event.findPointerIndex(i);
-                    val currentX = event.getX(pointerIndex)
-                    val currentY = event.getY(pointerIndex)
-                    windPlayers[i] = Wind(currentX, currentY)
-                    val speed =
-                        if (windPlayers.size > 3) ((100..200).random() / 100).toFloat() else 0F
-                    game.moveShip(currentX, currentY, speed)
+                    try {
+                        val pointerIndex: Int = event.findPointerIndex(i);
+                        val currentX = event.getX(pointerIndex)
+                        val currentY = event.getY(pointerIndex)
+                        windPlayers[i] = Wind(currentX, currentY)
+                        val speed =
+                            if (windPlayers.size > 3) ((100..200).random() / 100).toFloat() else 0F
+                        game.moveShip(currentX, currentY, speed)
+                    } catch (ex : IllegalArgumentException) {
+                        Log.e("PointerError", ex.message, ex)
+                    }
                 }
             }
         }

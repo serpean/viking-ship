@@ -48,8 +48,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:checked="true"
-            android:text="@string/easy_level"
-            android:textColor="#000000" />
+            android:text="@string/easy_level"/>
 
         <RadioButton
             android:id="@+id/normalLevelRadio"
