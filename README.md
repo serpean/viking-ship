@@ -4,7 +4,7 @@ Proof of concept of a local multiplayer Android Game based in multitouch technol
 
 ## Game Rules
 - 1 to * players
-- To move the boat ther should be 4 touch events at least
+- To move the boat there should be at least 4 touch events.
 - Move the boat to the town without any collisions
 
 ## Requirements
