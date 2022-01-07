@@ -16,5 +16,5 @@ Proof of concept of a local multiplayer Android Game based in multitouch technol
 ![App UML diagram](./docs/out/game.png "Game diagram")
 
 ## Acknowledgements
-<div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
-https://www.deviantart.com/berserkitty/art/Seamless-Cartoon-styled-Water-Texture-743787929
+* <div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+* https://www.deviantart.com/berserkitty/art/Seamless-Cartoon-styled-Water-Texture-743787929
